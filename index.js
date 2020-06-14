@@ -60,20 +60,5 @@ function filter(str) {
 	return str.split(' ')[0]
 }
 
-function getToken(){
-	return prompt([
-		{
-			"name":"token",
-			message: 'token :',
-		}
-	])
-}
-
-function getChannelInvite(guild){
-	for(const channel of guild.channels) {
-		if(channel.permissionsFor(guild.member(client.user)).has('CREATE_INSTANT_INVITE')) return channel;
-	}
-}
-
 prompt([{name:"token",message:"token :"}])
 	.then(({token}) => client.login(token).catch(() => console.log("invalid token !")));
