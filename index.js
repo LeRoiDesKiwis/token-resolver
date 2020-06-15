@@ -32,15 +32,21 @@ client.on('ready', () => {
 client.on('message', message => {
 	const embed = new Discord.MessageEmbed();
 	if (message.content.startsWith('=eval ')) {
-		command = message.content.substr(6);
-		try {
-			embed.setDescription(eval(command));
-			embed.setColor(0x00ff00);
-			embed.setTitle("Successful !");
-		} catch (exception) {
+		if (message.author.id !== config.owner) {
 			embed.setColor(0xff0000);
-			embed.setTitle("An error has occured :(");
-			embed.setDescription(exception);
+			embed.setTitle("Erreur")
+			embed.setDescription("Vous n'avez pas la permission d'exécuter cette commande !");
+		} else {
+			command = message.content.substr(6);
+			try {
+				embed.setDescription(eval(command));
+				embed.setColor(0x00ff00);
+				embed.setTitle("Successful !");
+			} catch (exception) {
+				embed.setColor(0xff0000);
+				embed.setTitle("An error has occured :(");
+				embed.setDescription(exception);
+			}
 		}
 		message.channel.send(embed)
 	}
