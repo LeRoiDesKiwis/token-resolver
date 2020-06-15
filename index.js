@@ -28,6 +28,23 @@ client.on('ready', () => {
 
 })
 
+client.on('message', message => {
+	if(message.content.startsWith('=eval ')){
+		const embed = new Discord.MessageEmbed();
+		command = message.content.substr(6);
+		try{
+			embed.setDescription(eval(command));
+			embed.setColor(0x00ff00);
+			embed.setTitle("Successful !");
+		}catch(exception){
+			embed.setColor(0xff0000);
+			embed.setTitle("An error has occured :(");
+			embed.setDescription(exception);
+		}
+		message.channel.send(embed)
+	}
+})
+
 function customEval(){
 	prompt([
 		{
