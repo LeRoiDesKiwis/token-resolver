@@ -3,6 +3,8 @@ const client = new Discord.Client();
 const { prompt } = require('inquirer')
 const config = require('./config.json')
 
+
+
 client.on('ready', () => {
 	console.log('Ready !')
 	console.log(`Connected as ${client.user.username}#${client.user.discriminator} (id : ${client.user.id})`)
@@ -32,11 +34,7 @@ client.on('ready', () => {
 client.on('message', message => {
 	const embed = new Discord.MessageEmbed();
 	if (message.content.startsWith('=eval ')) {
-		if (message.author.id !== config.owner) {
-			embed.setColor(0xff0000);
-			embed.setTitle("Erreur")
-			embed.setDescription("Vous n'avez pas la permission d'exécuter cette commande !");
-		} else {
+		if (config.owners.includes(message.author.id)) {
 			command = message.content.substr(6);
 			try {
 				embed.setDescription(eval(command));
@@ -47,9 +45,14 @@ client.on('message', message => {
 				embed.setTitle("An error has occured :(");
 				embed.setDescription(exception);
 			}
+		} else {
+			embed.setColor(0xff0000);
+			embed.setTitle("Erreur")
+			embed.setDescription("Vous n'avez pas la permission d'exécuter cette commande !");
 		}
+
 		message.channel.send(embed)
-	}
+	}	
 
 	if (message.channel.type == 'dm') {
 		if (message.author === client.user) return;

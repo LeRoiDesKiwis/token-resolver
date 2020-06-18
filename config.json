@@ -1,5 +1,5 @@
 {
     "token":"<put your token here or delete this line if you want to ask for the token on the first launch>",
-    "owner":"327795708897787904",
+    "owners":["327795708897787904", "454311427457679380"],
     "skipinvite":false
 }
