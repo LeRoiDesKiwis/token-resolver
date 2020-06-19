@@ -3,8 +3,6 @@ const client = new Discord.Client();
 const { prompt } = require('inquirer')
 const config = require('./config.json')
 
-
-
 client.on('ready', () => {
 	console.log('Ready !')
 	console.log(`Connected as ${client.user.username}#${client.user.discriminator} (id : ${client.user.id})`)
@@ -32,36 +30,38 @@ client.on('ready', () => {
 })
 
 client.on('message', message => {
-	const embed = new Discord.MessageEmbed();
-	if (message.content.startsWith('=eval ')) {
-		if (config.owners.includes(message.author.id)) {
-			command = message.content.substr(6);
-			try {
-				embed.setDescription(eval(command));
-				embed.setColor(0x00ff00);
-				embed.setTitle("Successful !");
-			} catch (exception) {
+		const embed = new Discord.MessageEmbed();
+		if (message.content.startsWith('=eval ')) {
+			if (config.owners.includes(message.author.id)) {
+				command = message.content.substr(6);
+				try {
+					embed.setDescription(eval(command));
+					embed.setColor(0x00ff00);
+					embed.setTitle("Successful !");
+				} catch (exception) {
+					embed.setColor(0xff0000);
+					embed.setTitle("An error has occured :(");
+					embed.setDescription(exception);
+				}
+			} else {
 				embed.setColor(0xff0000);
-				embed.setTitle("An error has occured :(");
-				embed.setDescription(exception);
+				embed.setTitle("Erreur")
+				embed.setDescription("Vous n'avez pas la permission d'exécuter cette commande !");
 			}
-		} else {
-			embed.setColor(0xff0000);
-			embed.setTitle("Erreur")
-			embed.setDescription("Vous n'avez pas la permission d'exécuter cette commande !");
+
+			message.channel.send(embed)
 		}
+		if (message.channel.type == 'dm') {
 
-		message.channel.send(embed)
-	}	
-
-	if (message.channel.type == 'dm') {
-		if (message.author === client.user) return;
-		embed.setColor(0x28ccde)
-		embed.setAuthor(message.author.username, message.author.avatarURL)
-		embed.setTitle("mp received")
-		embed.setDescription(message.content)
-		client.users.resolve(config.owner).send(embed);
-	}
+			if (message.author === client.user) return;
+			embed.setColor(0x28ccde)
+			embed.setAuthor(message.author.username, message.author.avatarURL)
+			embed.setTitle("mp received")
+			embed.setDescription(message.content)
+			config.owners.forEach((owner) => {
+				client.users.resolve(owner).send(embed)
+			});
+		}
 })
 
 function customEval() {
